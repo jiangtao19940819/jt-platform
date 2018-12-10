@@ -4,8 +4,10 @@
 			<el-header class="cram">
 				<v-header></v-header>
 			</el-header>
-			<el-main class="bd">
-				<router-view></router-view>
+			<el-main>
+				<div class="cm">
+					<router-view></router-view>
+				</div>
 			</el-main>
 		</el-container>
 	</div>
@@ -24,9 +26,6 @@
 </script>
 
 <style>
-	.bd {
-		border:2px red solid;
-	}
 	.container-position {
 		position : absolute;
 		top : 0;
@@ -37,5 +36,14 @@
 	.cram {
 		margin:0px;
 		padding:0px;
+	}
+
+	.cm {
+		border:1px solid red;
+		position:absolute;
+		top:60px;
+		left:0px;
+		right:0px;
+		bottom:0px
 	}
 </style>

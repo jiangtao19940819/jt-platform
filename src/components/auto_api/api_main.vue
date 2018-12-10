@@ -1,15 +1,18 @@
 <template>
 	<div id='api'>
-		<el-container class="cram">
-			<el-aside class="bd">
+		<el-container class="bd">
+			<el-aside>
 				<el-menu>
 					<el-menu-item><b>模块管理</b></el-menu-item>
 					<el-menu-item><b>接口管理</b></el-menu-item>
 					<el-menu-item><b>用例管理</b></el-menu-item>
 					<el-menu-item><b>用例执行</b></el-menu-item>
+					<el-menu-item><b>定时任务</b></el-menu-item>
 				</el-menu>
 			</el-aside>
-			<el-main></el-main>
+			<el-main>
+				<h1>蒋滔</h1>
+			</el-main>
 		</el-container>
 		
 			
@@ -30,18 +33,13 @@
 <style>
 	.bd {
 		border:1px red solid;
-		padding-top: 0px;
-		padding-left: 0px;
-		padding-bottom: 0px;
-
-	}
-
-	.cram {
 		position:absolute;
+		top:0px;
+		bottom:0px;
 		left:0px;
-		top:60px;
-		height:100%;
-		width:100%;
-	
+		right:0px;
+		
+
 	}
+
 </style>
