@@ -5,7 +5,7 @@
 				<v-header></v-header>
 			</el-header>
 			<el-main>
-				<div class="cm">
+				<div class="all">
 					<router-view></router-view>
 				</div>
 			</el-main>
@@ -38,8 +38,7 @@
 		padding:0px;
 	}
 
-	.cm {
-		border:1px solid red;
+	.all {
 		position:absolute;
 		top:60px;
 		left:0px;
