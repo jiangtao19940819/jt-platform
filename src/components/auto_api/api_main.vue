@@ -2,12 +2,29 @@
 	<div id='api'>
 		<el-container class="api-all">
 			<el-aside width=150px style="background-color:#409EFF">
-				<el-menu text-color="#E8D098" active-text-color="red" background-color="#409EFF" router>
-					<el-menu-item index='/api/project'><div class="api-center"><b>模块管理</b></div></el-menu-item>
-					<el-menu-item index='2'><div class="api-center"><b>接口管理</b></div></el-menu-item>
-					<el-menu-item index='3'><div class="api-center"><b>用例管理</b></div></el-menu-item>
-					<el-menu-item index='4'><div class="api-center"><b>用例执行</b></div></el-menu-item>
-					<el-menu-item index='5'><div class="api-center"><b>定时任务</b></div></el-menu-item>
+				<el-menu text-color="#E8D098" active-text-color="red" background-color="#409EFF" default-active='/api/project' router>
+					<el-menu-item index='/api/project'> 
+						<i class="el-icon-location"></i>
+						<span slot="title"><b>模块管理</b></span>
+					</el-menu-item>
+					<el-menu-item index='2'>
+						<i class="el-icon-menu"></i>
+						<span slot="title"><b>接口管理</b></span>
+					</el-menu-item>
+					<el-menu-item index='3'>
+						<i class="el-icon-info
+
+						"></i>
+						<span slot="title"><b>用例管理</b></span>
+					</el-menu-item>
+					<el-menu-item index='4'>
+						<i class="el-icon-setting"></i>
+						<span slot="title"><b>用例执行</b></span>
+					</el-menu-item>
+					<el-menu-item index='5'>
+						<i class="el-icon-time"></i>
+						<span slot="title"><b>定时任务</b></span>
+					</el-menu-item>
 				</el-menu>
 			</el-aside>
 			<el-main>
