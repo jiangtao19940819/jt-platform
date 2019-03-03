@@ -1,5 +1,5 @@
 <template>
-	<div id="header">
+	<div id="jt-header">
 		<div>
 			<img src="../assets/sogou.jpg"  style="float:left;" height="60px" width="150px" />
 		</div>
@@ -14,9 +14,11 @@
 
 <script>
 	export default {
-		name : "header",
+		name : "jt-header",
 		data(){
-			activeIndex : "2"
+			return {
+
+			}
 		}
 	}
 </script>

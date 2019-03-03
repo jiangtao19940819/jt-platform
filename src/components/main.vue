@@ -1,5 +1,5 @@
 <template>
-	<div id="main">
+	<div id="jt-main">
 		<el-container class="container-position">
 			<el-header class="cram">
 				<v-header></v-header>
@@ -16,8 +16,11 @@
 <script>
 	import header from '@/components/header.vue'
 	export default {
-		name : "main",
+		name : "jt-main",
 		data(){
+			return {
+				
+			}
 		},
 		components : {
 			"v-header" : header

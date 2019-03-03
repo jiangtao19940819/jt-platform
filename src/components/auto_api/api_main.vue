@@ -15,7 +15,7 @@
 						<i class="el-icon-info
 
 						"></i>
-						<span slot="title"><b>用例管理</b></span>
+						<span slot="title"><b>计划管理</b></span>
 					</el-menu-item>
 					<el-menu-item index='4'>
 						<i class="el-icon-setting"></i>
