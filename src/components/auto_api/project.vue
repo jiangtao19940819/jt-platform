@@ -162,7 +162,7 @@
 					console.log(this.project.name);
 					this.dialogCreateProject = false
 				},
-				sendMessage4(){
+				sendMessage22(){
 					this.$http.get("http://localhost:8888/getParam6",{
 						params:this.name
 					}).then(function(response){
@@ -171,7 +171,7 @@
 						console.log(err)
 					})
 				},
-				sendMessage2(){
+				sendMessage8(){
 					this.$http.get(
 						"http://localhost:8888/getParam6?username=jiangtao&password=123456"
 					).then(function(response){
@@ -188,12 +188,13 @@
 							console.log(err)
 						})
 				},
-				sendMessage5(){
-					this.$http.get("getParam6",this.name)
-				},
 				sendMessage(){
-					this.result = this.$http.post("getTest");
-					console.log(this.result.code);
+					this.response = this.$http.get("getParam6",this.name)
+					console.log(this.response);
+				},
+				sendMessage8(){
+					this.response = this.$http.post("getTest");
+					console.log(this.response);
 				},
 
 			}

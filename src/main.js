@@ -9,7 +9,7 @@ import axios from 'axios'
 
 import http from './httpRequest/http.js'
 Vue.prototype.$http = http
-
+//Vue.prototype.$http = axios
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 
