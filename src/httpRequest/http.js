@@ -4,26 +4,19 @@ let request = axios.create({
 	timeout:100000
 })
 
+request.interceptors.response.use(
+	function(response){
+		return Promise.resolve(response.data)
+	},
+	function(error){
+		return Promise.reject(error)
+	}
+)
 export default {
 	get:function(url,params){
-		return new Promise((resolve,reject)=>{
-			request.get(url,{params:params
-			}).then(res=>{resolve(res.data)
-			}).catch(err=>{reject(err)}).then(function(val){
-				console.log(val)
-				return val
-			}
-		})
+		return request.get(url,{params:params})
 	},
 	post:function(url,data){
-		http({
-			method:"POST",
-			url:url,
-			data:data
-		}).then(function(response){
-			return response;
-		}).catch(function(err){
-			return err;
-		})
+		return request.post(url,data)
 	}
 }

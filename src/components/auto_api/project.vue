@@ -4,7 +4,7 @@
 			<el-button type="success" round @click="createProject
 			">新增模块</el-button>
 		</el-row>
-		<el-row style="height:40px"><el-button @click="sendMessage">点击</el-button></el-row>
+		<el-row style="height:40px"><el-button @click="sendMessage">点击{{response}}</el-button></el-row>
 		<el-row>
 			<div id="tableData">
 				<el-table :data="projectData.filter(data=>data.name.includes(search))" stripe border>
@@ -188,13 +188,16 @@
 							console.log(err)
 						})
 				},
-				sendMessage(){
-					this.response = this.$http.get("getParam6",this.name)
-					console.log(this.response);
-				},
 				sendMessage8(){
-					this.response = this.$http.post("getTest");
-					console.log(this.response);
+					this.$http.get("getParam6",this.name).then(response=>{
+						this.response=response.result
+					})
+		
+				},
+				sendMessage(){
+					this.$http.post("getParam7",this.name).then(response=>{
+						this.response = response.data
+					})
 				},
 
 			}
