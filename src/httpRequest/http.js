@@ -5,18 +5,18 @@ let request = axios.create({
 })
 
 request.interceptors.response.use(
-	function(response){
-		return Promise.resolve(response.data)
+    function(response){
+		return  Promise.resolve(response.data)
 	},
-	function(error){
-		return Promise.reject(error)
+    function(error){
+		return  Promise.reject(error)
 	}
 )
 export default {
-	get:function(url,params){
-		return request.get(url,{params:params})
+    get: function(url,params){
+		return  request.get(url,{params:params})
 	},
-	post:function(url,data){
-		return request.post(url,data)
+    post:function(url,data){
+		return  request.post(url,data)
 	}
 }

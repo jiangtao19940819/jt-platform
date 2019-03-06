@@ -58,14 +58,14 @@
 		<el-dialog title="新增模块" :visible.sync="dialogCreateProject" id="addProject">
 			<el-form :model="project">
 				<el-form-item label="名称">
-					<el-input v-model="project.name" placeholder="请输入项目名"></el-input>
+					<el-input v-model="project.projectName" placeholder="请输入项目名"></el-input>
 				</el-form-item>
 				<el-form-item label="备注">
 					<el-input v-model="project.description" placeholder="请输入备注"></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
-				<el-button type="primary" @click="ensureAddEditProject">确 定</el-button>
+				<el-button type="primary" @click="ensureAddProject">确 定</el-button>
    			  	<el-button @click="dialogCreateProject = false">取 消</el-button>
   			</span>
 		</el-dialog>
@@ -79,43 +79,11 @@
 		name:'project',
 		data(){
 			return {
-				projectData: [{
-						name: 'yunguan',
-						time: '2018-01-08',
-						description: '运管系统'
-       				},{
-       					name: 'bo',
-						time: '2018-02-08',
-						description: '代理商系统'
-       				},{
-       					name: 'kabo',
-						time: '2018-05-08',
-						description: 'KA代理商系统'
-       				},{
-       					name: 'crmdata',
-						time: '2018-05-08',
-						description: '数据组接口'
-       				},{
-						name: 'yunguan',
-						time: '2018-01-08',
-						description: '运管系统'
-       				},{
-       					name: 'bo',
-						time: '2018-02-08',
-						description: '代理商系统'
-       				},{
-       					name: 'kabo',
-						time: '2018-05-08',
-						description: 'KA代理商系统'
-       				},{
-       					name: 'crmdata',
-						time: '2018-05-08',
-						description: '数据组接口'
-       				}
+				projectData: [
 				],
 				project:{
-					name: '',
-					time: '',
+					projectName: '',
+					createTime: '',
 					description: ''
 				},
 				name:{
@@ -127,7 +95,11 @@
 				dialogCreateProject:false,
 				dialogTableVisible:false,
 				dialogEditProject:false,
-				response:""
+				response:{
+					result:"",
+					msg:"",
+					data:[]
+					}
 				}
 			},
 			methods: {
@@ -158,47 +130,26 @@
 					this.dialogCreateProject = true
 
 				},
-				ensureAddEditProject(){
-					console.log(this.project.name);
-					this.dialogCreateProject = false
-				},
-				sendMessage22(){
-					this.$http.get("http://localhost:8888/getParam6",{
-						params:this.name
-					}).then(function(response){
-						console.log(response)
-					}).catch(function(err){
-						console.log(err)
-					})
-				},
-				sendMessage8(){
-					this.$http.get(
-						"http://localhost:8888/getParam6?username=jiangtao&password=123456"
-					).then(function(response){
-						console.log(response)
-					}).catch(function(err){
-						console.log(err)
-					})
-				},
-				sendMessage3(){
-					this.$http.post("http://localhost:8888/getParam7",
-						this.name).then(function(res){
-							console.log(res)
-						}).catch(function(err){
-							console.log(err)
-						})
-				},
-				sendMessage8(){
-					this.$http.get("getParam6",this.name).then(response=>{
-						this.response=response.result
-					})
-		
+				ensureAddProject(){
+					this.$http.post("project/create",this.project).then(res=>{
+						this.response = res
+					});
+					console.log(this.response.msg)
+					this.afterOperate();
+					//this.dialogCreateProject = false;
 				},
 				sendMessage(){
 					this.$http.post("getParam7",this.name).then(response=>{
 						this.response = response.data
 					})
 				},
+				afterOperate(){
+					if(this.response.result=="200"){
+						this.$message.success(this.response.msg)
+					}else{
+						this.$message.error(this.response.msg)
+					}
+				}
 
 			}
 		}
