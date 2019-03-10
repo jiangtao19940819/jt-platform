@@ -5,10 +5,11 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import axios from 'axios'
-
+import jquery from 'jquery'
+import utils from './common/utils.js'
 import http from './httpRequest/http.js'
 Vue.prototype.$http = http
+Vue.prototype.$utils = utils
 //Vue.prototype.$http = axios
 Vue.use(ElementUI)
 Vue.config.productionTip = false

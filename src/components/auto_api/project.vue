@@ -4,19 +4,19 @@
 			<el-button type="success" round @click="createProject
 			">新增模块</el-button>
 		</el-row>
-		<el-row style="height:40px"><el-button @click="sendMessage">点击{{response}}</el-button></el-row>
+		<el-row style="height:40px"><el-button @click="sendMessage">点击</el-button></el-row>
 		<el-row>
 			<div id="tableData">
-				<el-table :data="projectData.filter(data=>data.name.includes(search))" stripe border>
+				<el-table :data="projectData">
 					<el-table-column type="index">
 					
 					</el-table-column>
-					<el-table-column prop="name" label="模块名">
+					<el-table-column prop="projectName" label="模块名">
 					</el-table-column>
-					<el-table-column prop="time" label="创建时间">
+					<el-table-column prop="createTime" label="创建时间">
 						
 					</el-table-column>
-					<el-table-column prop="description" label="描述">
+					<el-table-column prop="projectDescription" label="描述">
 						
 					</el-table-column>
 					<el-table-column>
@@ -41,13 +41,13 @@
 		<el-dialog title="编辑项目" :visible.sync="dialogEditProject">
 			<el-form :model="project">
 				<el-form-item label="名称">
-					<el-input v-model="project.name" placeholder="project.name"></el-input>
+					<el-input v-model="project.projectName" placeholder=project.projectName></el-input>
 				</el-form-item>
 				<el-form-item label="时间">
-					<el-input v-model="project.time" placeholder="project.time"></el-input>
+					<el-input v-model="project.createTime" placeholder=project.createTime></el-input>
 				</el-form-item>
 				<el-form-item label="备注">
-					<el-input v-model="project.description" placeholder="project.description"></el-input>
+					<el-input v-model="project.projectDescription" placeholder="project.projectDescription"></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -61,7 +61,7 @@
 					<el-input v-model="project.projectName" placeholder="请输入项目名"></el-input>
 				</el-form-item>
 				<el-form-item label="备注">
-					<el-input v-model="project.description" placeholder="请输入备注"></el-input>
+					<el-input v-model="project.projectDescription" placeholder="请输入备注"></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -84,13 +84,8 @@
 				project:{
 					projectName: '',
 					createTime: '',
-					description: ''
+					projectDescription: ''
 				},
-				name:{
-					username: 'jiangtao',
-					password: '1308830b'
-				},
-
 				search:"",
 				dialogCreateProject:false,
 				dialogTableVisible:false,
@@ -102,21 +97,34 @@
 					}
 				}
 			},
+		
+			
 			methods: {
+				updated:function(){
+					this.sendMessage();
+				},
+				created:function(){
+					this.sendMessage();
+				},
+				mounted:function(){
+					this.sendMessage();
+				},
+				beforecreate:function(){
+        			this.sendMessage();
+    			},
 				editProject(row){
-					this.project.name = row.name;
-					this.project.time = row.time;
-					this.project.description = row.description;
+					this.project.projectName = row.projectName;
+					this.project.createTime = row.createTime;
+					this.project.projectDescription = row.projectDescription;
 					this.dialogEditProject = true;
 				},
 				ensurEditProject(){
-					console.log(this.project.name)
 					this.dialogEditProject = false;
 				},
 				deleteProject(row){
-					this.project.name = row.name;
-					this.project.time = row.time;
-					this.project.description = row.description;
+					this.project.projectName = row.projectName;
+					this.project.projectTime = row.createTime;
+					this.project.projectDescription = row.projectDescription;
 					this.dialogTableVisible = true;
 				},
 				ensureDelProject(){
@@ -124,23 +132,33 @@
 					this.dialogTableVisible = false;
 				},
 				createProject(){
-					this.project.name  = "";
-					this.project.time  = "";
-					this.project.description  = "";
+					this.project.projectName  = "";
+					this.project.crateTime  = "";
+					this.project.projectDescription  = "";
 					this.dialogCreateProject = true
 
 				},
 				ensureAddProject(){
 					this.$http.post("project/create",this.project).then(res=>{
-						this.response = res
+						this.response = res;
+						this.afterOperate();
+						this.dialogCreateProject = false;
 					});
-					console.log(this.response.msg)
-					this.afterOperate();
+					
 					//this.dialogCreateProject = false;
 				},
 				sendMessage(){
-					this.$http.post("getParam7",this.name).then(response=>{
-						this.response = response.data
+					this.$http.get("project/query",{search:this.search}).then(res=>{
+						this.response = res;
+
+						this.projectData = this.response.data;
+					})
+				},
+				sendMessage2(){
+					this.$http.get("project/query",{search:this.search}).then(res=>{
+						this.response = res;
+
+						this.projectData = this.response.data;
 					})
 				},
 				afterOperate(){
