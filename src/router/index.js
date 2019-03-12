@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import MainApi from '@/components/auto_api/api_main'
 import Project from '@/components/auto_api/project'
-import Api from '@/components/auto_api/api'
+import TestCase from '@/components/auto_api/testcase'
 Vue.use(Router)
 
 export default new Router({
@@ -20,8 +20,8 @@ export default new Router({
           path: 'project',
           component: Project
         },{
-          path: '2',
-          component: Api
+          path: 'testcase',
+          component: TestCase
         }
       ]
     }

@@ -4,7 +4,7 @@
 			<el-button type="success" round @click="createProject
 			">新增模块</el-button>
 		</el-row>
-		<el-row style="height:40px"><el-button @click="sendMessage">点击</el-button></el-row>
+		<el-row style="height:40px"><el-button @click="queryProjectList">点击</el-button></el-row>
 		<el-row>
 			<div id="tableData">
 				<el-table :data="projectData">
@@ -32,7 +32,7 @@
 			</div>
 		</el-row>
 		<el-dialog title="是否删除" :visible.sync="dialogTableVisible" width="30%">
-			<span>这是一个提示</span>
+			<span>请确认是否删除：{{project.projectName}}</span>
 			<span slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="ensureDelProject">确 定</el-button>
    			  	<el-button @click="dialogTableVisible = false">取 消</el-button>
@@ -41,7 +41,7 @@
 		<el-dialog title="编辑项目" :visible.sync="dialogEditProject">
 			<el-form :model="project">
 				<el-form-item label="名称">
-					<el-input v-model="project.projectName" placeholder=project.projectName></el-input>
+					<el-input v-model="project.projectName" placeholder=project.projectName disabled></el-input>
 				</el-form-item>
 				<el-form-item label="时间">
 					<el-input v-model="project.createTime" placeholder=project.createTime></el-input>
@@ -97,7 +97,9 @@
 					}
 				}
 			},
-		
+			mounted:function(){
+				this.queryProjectList();
+			},
 			
 			methods: {
 				updated:function(){
@@ -119,7 +121,13 @@
 					this.dialogEditProject = true;
 				},
 				ensurEditProject(){
-					this.dialogEditProject = false;
+					this.$http.post("project/update",this.project).then(res=>{
+						this.response = res;
+						this.afterOperate();
+						this.queryProjectList();
+						this.dialogEditProject = false;
+					});
+					
 				},
 				deleteProject(row){
 					this.project.projectName = row.projectName;
@@ -128,8 +136,12 @@
 					this.dialogTableVisible = true;
 				},
 				ensureDelProject(){
-					console.log(this.project.name)
-					this.dialogTableVisible = false;
+					this.$http.post("project/delete",this.project).then(res=>{
+						this.response = res;
+						this.afterOperate();
+						this.queryProjectList();
+						this.dialogTableVisible = false;
+					})
 				},
 				createProject(){
 					this.project.projectName  = "";
@@ -142,12 +154,13 @@
 					this.$http.post("project/create",this.project).then(res=>{
 						this.response = res;
 						this.afterOperate();
+						this.queryProjectList();
 						this.dialogCreateProject = false;
 					});
 					
 					//this.dialogCreateProject = false;
 				},
-				sendMessage(){
+				queryProjectList(){
 					this.$http.get("project/query",{search:this.search}).then(res=>{
 						this.response = res;
 

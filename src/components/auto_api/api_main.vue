@@ -7,7 +7,7 @@
 						<i class="el-icon-location"></i>
 						<span slot="title"><b>模块管理</b></span>
 					</el-menu-item>
-					<el-menu-item index='2'>
+					<el-menu-item index='/api/testcase'>
 						<i class="el-icon-menu"></i>
 						<span slot="title"><b>接口管理</b></span>
 					</el-menu-item>
