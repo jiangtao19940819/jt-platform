@@ -3,25 +3,25 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import MainApi from '@/components/auto_api/api_main'
 import Project from '@/components/auto_api/project'
-import TestCase from '@/components/auto_api/testcase'
+import API from '@/components/auto_api/api'
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/api/project'
+      redirect: '/autoapi/project'
     },{
-      path: '/api',
+      path: '/autoapi',
       component: MainApi,
-      redirect: '/api/project',
+      redirect: '/autoapi/project',
       children: [
         {
           path: 'project',
           component: Project
         },{
-          path: 'testcase',
-          component: TestCase
+          path: 'api',
+          component: API
         }
       ]
     }

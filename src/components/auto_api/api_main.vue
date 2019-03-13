@@ -2,12 +2,12 @@
 	<div id='api'>
 		<el-container class="api-all">
 			<el-aside width=150px style="background-color:#409EFF">
-				<el-menu text-color="#E8D098" active-text-color="red" background-color="#409EFF" default-active='/api/project' router>
-					<el-menu-item index='/api/project'> 
+				<el-menu text-color="#E8D098" active-text-color="red" background-color="#409EFF" default-active='/autoapi/project' router>
+					<el-menu-item index='/autoapi/project'> 
 						<i class="el-icon-location"></i>
 						<span slot="title"><b>模块管理</b></span>
 					</el-menu-item>
-					<el-menu-item index='/api/testcase'>
+					<el-menu-item index='/autoapi/api'>
 						<i class="el-icon-menu"></i>
 						<span slot="title"><b>接口管理</b></span>
 					</el-menu-item>

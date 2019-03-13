@@ -102,18 +102,6 @@
 			},
 			
 			methods: {
-				updated:function(){
-					this.sendMessage();
-				},
-				created:function(){
-					this.sendMessage();
-				},
-				mounted:function(){
-					this.sendMessage();
-				},
-				beforecreate:function(){
-        			this.sendMessage();
-    			},
 				editProject(row){
 					this.project.projectName = row.projectName;
 					this.project.createTime = row.createTime;
