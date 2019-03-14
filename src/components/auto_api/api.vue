@@ -1,20 +1,19 @@
 <template>
 	<div id="api">
 		<el-row>
-			<el-button type="success" round @click="createProject">新增接口</el-button>
+			<el-button type="success" round @click="createApi">新增接口</el-button>
 		</el-row>
 		
 		<el-row style="height:40px;margin:40px" >
-			<el-col span=8>所属服务：
+			<el-col :span="8">所属服务：
 				<el-select v-model="projectName" placeholder="请输入项目名">
-					<el-option v-for="item in projectList" :key="item.value" :label="item.label" 
-					:value="item.value"></el-option>
+					<el-option v-for="item in projectList" :key="item" :label="item" :value="item"></el-option>
 				</el-select>
 			</el-col>
-			<el-col span=8>
+			<el-col :span="8">
 				<el-input placeholer="请输入接口路径"></el-input>
 			</el-col>
-			<el-col span=4>
+			<el-col :span="4">
 				<el-button type="success">查询</el-button>
 			</el-col>
 		</el-row>
@@ -48,12 +47,40 @@
 			    </el-table>
 			</div>
 		</el-row>
+		<el-dialog title="新增接口" :visible.sync="dialogCreateApi" width="700px" @open="getAllProject()">
+			<el-form :model="api">
+				<el-form-item label="接口路径">
+					<el-input v-model="api.apiPath" placeholder="请输入接口路径"></el-input>
+				</el-form-item>
+				<el-form-item label="接口描述">
+					<el-input v-model="api.apiDescription" placeholder="请输入接口描述"></el-input>
+				</el-form-item>
+				<el-form-item label="接口协议">
+					<el-select v-model="api.apiProtocol">
+						<el-option v-for="item in apiProtocolList" :key="item" :value="item" :lable="item"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="请求方式">
+					<el-select v-model="api.apiReqMethod">
+						<el-option v-for="item in apiReqMethodList" :key="item" :value="item" :lable="item"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="所属服务">
+					<el-select v-model="api.apiOfProject">
+						<el-option v-for="item in projectList" :key="item" :value="item" :lable="item"></el-option>
+					</el-select>
+				</el-form-item>
+			</el-form>
+		</el-dialog>
 	</div>
 		
 </template>
 <script>
 	export default {
 		name:'api',
+		mounted:function(){
+			this.getAllProject();
+		},
 		data(){
 			return {
 				apiData : [
@@ -65,11 +92,32 @@
 						apiOfProject:"crmdata"
 					}
 				],
-				projectList:[
-					{value:"crmdata",label:"crmdata"},
-					{value:"bo",label:"bo"}
-				],
-				projectName:""
+				projectList:[],
+				api :{
+					apiPath:"",
+					apiDescription:"",
+					apiProtocol:"HTTP",
+					apiReqMethod:"GET",
+					apiOfProject:""
+				},
+				projectName:"",
+				dialogCreateApi:false,
+				apiProtocolList:["HTTP","HTTPS","RPC","SOA"],
+				apiReqMethodList:["GET","POSTJSON","POST"]
+			}
+		},
+		methods:{
+			createApi:function(){
+				this.dialogCreateApi = true;
+			},
+			getAllProject:function(){
+				this.$http.getUrl("project/getAll").then(res=>{
+						this.projectList = res.data;
+						if(this.projectList.length>0){
+							this.projectName = this.projectList[0];
+							this.api.apiOfProject = this.projectList[0];
+						}
+					});
 			}
 		}
 	}

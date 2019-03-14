@@ -47,6 +47,9 @@ export default {
     get: async function(url,params){
 		return await request.get(url,{params:params})
 	},
+	getUrl: async function(url){
+		return await request.get(url)
+	},
     post:async function(url,data){
 		return  await request.post(url,data)
 	}
