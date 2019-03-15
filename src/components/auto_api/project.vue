@@ -57,7 +57,7 @@
 		</el-dialog>
 		<el-dialog title="新增模块" :visible.sync="dialogCreateProject" id="addProject">
 			<el-form :model="project">
-				<el-form-item label="名称">
+				<el-form-item label="名称" :required="true">
 					<el-input v-model="project.projectName" placeholder="请输入项目名"></el-input>
 				</el-form-item>
 				<el-form-item label="备注">
