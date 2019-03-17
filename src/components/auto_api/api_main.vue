@@ -11,15 +11,15 @@
 						<i class="el-icon-menu"></i>
 						<span slot="title"><b>接口管理</b></span>
 					</el-menu-item>
-					<el-menu-item index='3'>
+					<el-menu-item index='/autoapi/caseManage'>
 						<i class="el-icon-info
 
 						"></i>
-						<span slot="title"><b>计划管理</b></span>
+						<span slot="title"><b>用例管理</b></span>
 					</el-menu-item>
 					<el-menu-item index='4'>
 						<i class="el-icon-setting"></i>
-						<span slot="title"><b>用例执行</b></span>
+						<span slot="title"><b>计划管理</b></span>
 					</el-menu-item>
 					<el-menu-item index='5'>
 						<i class="el-icon-time"></i>

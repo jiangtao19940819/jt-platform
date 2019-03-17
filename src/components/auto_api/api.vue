@@ -30,15 +30,15 @@
 					<el-table-column>
 						<template slot="header" slot-scope="scope">操作</template>
 						<template slot-scope="scope">
-							<el-button @click="editProject(scope.row)" type="success" size="small">Edit</el-button>
-							<el-button @click="deleteProject(scope.row)" type="danger" size="small">Delete</el-button>
+							<el-button @click="editApi(scope.row)" type="success" size="small">Edit</el-button>
+							<el-button @click="delApi(scope.row)" type="danger" size="small">Delete</el-button>
 						</template>
 					</el-table-column>
 			    </el-table>
 			</div>
 		</el-row>
-		<el-dialog title="新增接口" :visible.sync="dialogCreateApi" width="700px" @open="openCreateDialog()" @close="openCreateDialog()">
-			<el-form :model="api">
+		<el-dialog title="新增接口" :visible.sync="dialogCreateApi" width="700px" @open="openCreateDialog()" @close="queryApi()">
+			<el-form :model="api" label-width="100px">
 				<el-form-item label="接口路径" :required="true">
 					<el-input v-model="api.apiPath" placeholder="请输入接口路径"></el-input>
 				</el-form-item>
@@ -61,13 +61,49 @@
 					</el-select>
 				</el-form-item>
 			</el-form>
-			<span slot="footer">
+			<span slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="ensureCreateApi">确定</el-button>
 				<el-button @click="dialogCreateApi=false">取消</el-button>
 			</span>
 		</el-dialog>
-		<el-dialog title="编辑接口">
-			
+		<el-dialog title="编辑接口" :visible.sync="dialogEditApi" @close="queryApi()">
+			<el-form :model="api" label-width="100px">
+				<el-form-item label="接口路径" :required="true">
+					<el-input v-model="api.apiPath"></el-input>
+				</el-form-item>
+				<el-form-item label="接口描述" :required="true">
+					<el-input v-model="api.apiDescription"></el-input>
+				</el-form-item>
+				<el-form-item label="接口ID">
+					<el-input v-model="api.apiId" disabled></el-input>
+				</el-form-item>
+				<el-form-item label="接口协议">
+					<el-select v-model="api.apiProtocol">
+						<el-option v-for="item in apiProtocolList" :key="item" :value="item" :lable="item"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="请求方式">
+					<el-select v-model="api.apiReqMethod">
+						<el-option v-for="item in apiReqMethodList" :key="item" :value="item" :lable="item"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="所属服务">
+					<el-select v-model="api.apiOfProject">
+						<el-option v-for="item in projectList" :key="item" :value="item" :lable="item"></el-option>
+					</el-select>
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+				<el-button type="primary" @click="ensureEditApi">确定</el-button>
+				<el-button @click="dialogEditApi=false">取消</el-button>
+			</span>
+		</el-dialog>
+		<el-dialog title="删除接口" :visible.sync="dialogDelApi" width="30%" @close="queryApi()">
+			<span>确定是否删除接口:{{api.apiPath}} </span>
+			<span slot="footer" class="dialog-footer">
+				<el-button type="primary" @click="ensureDelApi">确定</el-button>
+				<el-button @click="dialogDelApi=false">取消</el-button>
+			</span>
 		</el-dialog>
 	</div>
 		
@@ -77,6 +113,7 @@
 		name:'api',
 		mounted:function(){
 			this.getAllProject();
+			this.queryApi();
 		},
 		data(){
 			return {
@@ -99,13 +136,6 @@
 					apiReqMethod:"GET",
 					apiOfProject:""
 				},
-				apiTemplate :{
-					apiPath:"",
-					apiDescription:"",
-					apiProtocol:"HTTP",
-					apiReqMethod:"GET",
-					apiOfProject:""
-				},
 				response:{
 					result:"",
 					msg:"",
@@ -114,6 +144,8 @@
 				apiPath:"",
 				projectName:"",
 				dialogCreateApi:false,
+				dialogEditApi:false,
+				dialogDelApi:false,
 				apiProtocolList:["HTTP","HTTPS","RPC","SOA"],
 				apiReqMethodList:["GET","POSTJSON","POST"]
 			}
@@ -135,26 +167,51 @@
 					
 				});
 			},
-			editApi:function(){
-				this.$http.get("api/queryApi",{projectName:this.projectName,apiPath:this.apiPath}
+			editApi:function(row){
+				this.dialogEditApi=true,
+				this.api.apiId=row.apiId,
+				this.api.apiPath=row.apiPath,
+				this.api.apiDescription=row.apiDescription,
+				this.api.apiProtocol=row.apiProtocol,
+				this.api.apiReqMethod=row.apiReqMethod,
+				this.api.apiOfProject=row.apiOfProject
+			},
+			ensureEditApi:function(){
+				this.$http.post("api/edit",this.api).then(res=>{
+					this.response = res;
+					this.afterOperate();
+					this.dialogEditApi = false;
+				})
+                
+			},
+			delApi:function(row){
+				this.dialogDelApi = true;
+				this.api.apiId=row.apiId;
+				this.api.apiPath=row.apiPath;
+				
+			},
+			ensureDelApi:function(){
+				this.$http.get("api/del",{apiId:this.api.apiId}
 					).then(res=>{
 					this.response = res;
-					this.apiData = res.data;
-					
-				});
+					this.dialogDelApi=false;
+					this.afterOperate();
+				})
 			},
 			queryApi:function(){
 				this.$http.get("api/query",{projectName:this.projectName,apiPath:this.apiPath}
 					).then(res=>{
 					this.response = res;
 					this.apiData = res.data;
+					console.log(this.apiData)
+					console.log(this.apiData)
+					console.log(this.apiData)
 				})
 			},
 			getAllProject:function(){
 				this.$http.getUrl("project/getAll").then(res=>{
 					this.projectList = res.data;
 					if(this.projectList.length>0){
-						this.projectName = this.projectList[0];
 						this.api.apiOfProject = this.projectList[0];
 					}
 				});

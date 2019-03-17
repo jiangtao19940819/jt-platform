@@ -11,12 +11,14 @@
 					<el-table-column type="index">
 					
 					</el-table-column>
-					<el-table-column prop="projectName" label="模块名">
+					<el-table-column prop="projectName" label="项目名称">
+					</el-table-column>
+					<el-table-column prop="projectId" label="项目ID">
 					</el-table-column>
 					<el-table-column prop="createTime" label="创建时间">
 						
 					</el-table-column>
-					<el-table-column prop="projectDescription" label="描述">
+					<el-table-column prop="projectDescription" label="项目描述">
 						
 					</el-table-column>
 					<el-table-column>
@@ -39,15 +41,18 @@
   			</span>
 		</el-dialog>
 		<el-dialog title="编辑项目" :visible.sync="dialogEditProject">
-			<el-form :model="project">
-				<el-form-item label="名称">
-					<el-input v-model="project.projectName" placeholder=project.projectName disabled></el-input>
+			<el-form :model="project" label-width="100px">
+				<el-form-item label="项目ID">
+					<el-input v-model="project.projectId" disabled></el-input>
 				</el-form-item>
-				<el-form-item label="时间">
-					<el-input v-model="project.createTime" placeholder=project.createTime></el-input>
+				<el-form-item label="项目名称" :required="true">
+					<el-input v-model="project.projectName"></el-input>
 				</el-form-item>
-				<el-form-item label="备注">
-					<el-input v-model="project.projectDescription" placeholder="project.projectDescription"></el-input>
+				<el-form-item label="创建时间">
+					<el-input v-model="project.createTime" disabled></el-input>
+				</el-form-item>
+				<el-form-item label="项目描述">
+					<el-input v-model="project.projectDescription"></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
@@ -56,7 +61,7 @@
   			</span>
 		</el-dialog>
 		<el-dialog title="新增模块" :visible.sync="dialogCreateProject" id="addProject">
-			<el-form :model="project">
+			<el-form :model="project" label-width="100px">
 				<el-form-item label="名称" :required="true">
 					<el-input v-model="project.projectName" placeholder="请输入项目名"></el-input>
 				</el-form-item>
@@ -83,6 +88,7 @@
 				],
 				project:{
 					projectName: '',
+					projectId:0,
 					createTime: '',
 					projectDescription: ''
 				},
@@ -103,6 +109,7 @@
 			
 			methods: {
 				editProject(row){
+					this.project.projectId = row.projectId;
 					this.project.projectName = row.projectName;
 					this.project.createTime = row.createTime;
 					this.project.projectDescription = row.projectDescription;
@@ -118,6 +125,7 @@
 					
 				},
 				deleteProject(row){
+					this.project.projectId = row.projectId;
 					this.project.projectName = row.projectName;
 					this.project.projectTime = row.createTime;
 					this.project.projectDescription = row.projectDescription;
