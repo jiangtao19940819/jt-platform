@@ -14,7 +14,7 @@
 				<el-input v-model="apiPath" placeholer="请输入接口路径" clearable></el-input>
 			</el-col>
 			<el-col :span="4">
-				<el-button type="success" @click="queryApi()">查询</el-button>
+				<el-button type="success" @click="">查询</el-button>
 			</el-col>
 		</el-row>
 		<el-row>
@@ -36,19 +36,19 @@
 			    </el-table>
 			</div>
 		</el-row>
-		<el-dialog title="新建用例" :visible.sync="dialogCreateSuite" width="700px" @open="openCreateDialog()" @close="queryApi()">
+		<el-dialog title="新建用例" :visible.sync="dialogCreateSuite" width="700px" @open="getAllProject">
 			<el-form :model="testSuite" label-width="100px" :rules="rules">
 				<el-form-item label="用例名称" :required="true">
 					<el-input v-model="testSuite.suiteName" placeholder="请输入接口路径"></el-input>
 				</el-form-item>
 				<el-form-item label="关联服务" :required="true">
-					<el-select v-model="testSuite.suiteOfProject">
+					<el-select v-model="testSuite.suiteOfProject" @change="queryApiByProject">
 						<el-option v-for="item in projectList" :key="item" :value="item" :lable="item"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="关联接口" :required="true">
-					<el-select v-model="testSuite.suiteOfApi">
-						<el-option v-for="item in projectList" :key="item" :value="item" :lable="item"></el-option>
+					<el-select v-model="testSuite.suiteOfApi" filterable>
+						<el-option v-for="item in apiList" :key="item" :value="item" :lable="item"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="用例描述">
@@ -76,17 +76,17 @@
 			</span>
 		</el-dialog>
 		<el-dialog title="添加用例步骤" :visible.sync="dialogAddStep">
-			<el-form :model="step" label-width="100px">
+			<el-form :model="step" label-width="120px">
 				<el-form-item label="步骤名称" :required="true">
 					<el-input v-model="step.stepName" placeholder="请输入步骤名称"></el-input>
 				</el-form-item>
 				<el-form-item label="关联接口">
-					<el-select v-model="step.stepOfApi">
-						<el-option v-for="item in projectList" :key="item" :value="item" :lable="item"></el-option>
+					<el-select v-model="step.stepOfApi" filterable @change="queryApiMethod">
+						<el-option v-for="item in apiList"  :key="item" :value="item" :lable="item"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="接口请求方式">
-					<el-input v-model="step.stepReqMethod"></el-input>
+					<el-input v-model="step.stepReqMethod" disabled></el-input>
 				</el-form-item>
 				<el-form-item label="接口请求参数">
 					<el-input type="textarea" v-model="step.requestParam"></el-input>
@@ -94,8 +94,21 @@
 				<el-form-item label="关联参数">
 					<el-input v-model="step.relationPram"></el-input>
 				</el-form-item>
-				<el-form-item label="断言">
-					<el-button>点击添加断言</el-button>
+				<el-form-item label="返回断言表达式">
+					<el-input v-model="step.relValue" placeholder="请输入接口断言表达式"></el-input>
+				</el-form-item>
+				<el-form-item label="断言方式">
+					<el-select v-model="step.assertMethod">
+						<el-option v-for="assert in assertList" :value="assert" :label="assert" :key="assert"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="断言数据来源">
+					<el-select v-model="step.expectedSource">
+						<el-option v-for="source in sourceList" :value="source" :label="source" :key="source"></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="断言数据">
+					<el-input v-model="step.expectedValue" placeholder="请输入断言数据"></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer">
@@ -111,7 +124,6 @@
 		name:'case',
 		mounted:function(){
 			this.getAllProject();
-			this.queryApi();
 		},
 		data(){
 			return {
@@ -125,6 +137,7 @@
 					}
 				],
 				projectList:[],
+				apiList:[],
 				testSuite:{
 					suiteId:0,
 					suiteName:"",
@@ -132,7 +145,7 @@
 					suiteOfProject:"",
 					suiteDescription:"",
 					suiteSteps:[
-						
+
 					]
 				},
 				step:{
@@ -141,19 +154,18 @@
 					stepReqMethod:"",
 					requestParam:"",
 					relationPram:"",
-					stepAssert:{
-						relValue:"",
-						assertMethod:"",
-						expectedSource:"",
-						expectedValue:""
-					}
-					
+				    relValue:"",
+					assertMethod:"",
+					expectedSource:"",
+					expectedValue:""
 				},
 				response:{
 					result:"",
 					msg:"",
 					data:[]
 				},
+				assertList:["等于","不等于"],
+				sourceList:["固定值","变量","数据库1"],
 				rules:{
 					suiteName:[{required:true,message:"用例名称必须填写"}]
 				},
@@ -179,11 +191,7 @@
 				this.dialogAddStep = false;
 				this.testSuite.suiteSteps.push(this.step);
 			},
-			openCreateDialog:function(){
-				this.api.apiPath = "";
-				this.api.apiDescription = "";
-				this.getAllProject();
-			},
+			
 			ensureCreateApi:function(){
 				this.$http.post("api/create",this.api).then(res=>{
 					this.response = res;
@@ -192,53 +200,24 @@
 					
 				});
 			},
-			editApi:function(row){
-				this.dialogEditApi=true,
-				this.api.apiId=row.apiId,
-				this.api.apiPath=row.apiPath,
-				this.api.apiDescription=row.apiDescription,
-				this.api.apiProtocol=row.apiProtocol,
-				this.api.apiReqMethod=row.apiReqMethod,
-				this.api.apiOfProject=row.apiOfProject
-			},
-			ensureEditApi:function(){
-				this.$http.post("api/edit",this.api).then(res=>{
-					this.response = res;
-					this.afterOperate();
-					this.dialogEditApi = false;
-				})
-                
-			},
-			delApi:function(row){
-				this.dialogDelApi = true;
-				this.api.apiId=row.apiId;
-				this.api.apiPath=row.apiPath;
-				
-			},
-			ensureDelApi:function(){
-				this.$http.get("api/del",{apiId:this.api.apiId}
+			queryApiByProject:function(){
+				this.$http.get("api/queryApiOfProject",{projectName:this.testSuite.suiteOfProject}
 					).then(res=>{
 					this.response = res;
-					this.dialogDelApi=false;
-					this.afterOperate();
+					this.testSuite.suiteOfApi="";
+					this.apiList = res.data;
 				})
 			},
-			queryApi:function(){
-				this.$http.get("api/query",{projectName:this.projectName,apiPath:this.apiPath}
+			queryApiMethod:function(){
+				this.$http.get("api/queryApiMethod",{apiName:this.step.stepOfApi}
 					).then(res=>{
 					this.response = res;
-					this.apiData = res.data;
-					console.log(this.apiData)
-					console.log(this.apiData)
-					console.log(this.apiData)
+					this.step.stepReqMethod = this.response.data[0];
 				})
 			},
 			getAllProject:function(){
 				this.$http.getUrl("project/getAll").then(res=>{
 					this.projectList = res.data;
-					if(this.projectList.length>0){
-						this.testSuite.suiteOfProject = this.projectList[0];
-					}
 				});
 			},
 			afterOperate(){

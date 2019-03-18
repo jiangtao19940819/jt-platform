@@ -203,9 +203,6 @@
 					).then(res=>{
 					this.response = res;
 					this.apiData = res.data;
-					console.log(this.apiData)
-					console.log(this.apiData)
-					console.log(this.apiData)
 				})
 			},
 			getAllProject:function(){
