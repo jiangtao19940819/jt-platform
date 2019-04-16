@@ -17,7 +17,7 @@
 						"></i>
 						<span slot="title"><b>用例管理</b></span>
 					</el-menu-item>
-					<el-menu-item index='4'>
+					<el-menu-item index='/autoapi/planManage'>
 						<i class="el-icon-setting"></i>
 						<span slot="title"><b>计划管理</b></span>
 					</el-menu-item>

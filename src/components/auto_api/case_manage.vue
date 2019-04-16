@@ -92,7 +92,7 @@
 					<el-input type="textarea" v-model="step.requestParam"></el-input>
 				</el-form-item>
 				<el-form-item label="关联参数">
-					<el-input v-model="step.relationPram"></el-input>
+					<el-input type="textarea" v-model="step.relationPram"></el-input>
 				</el-form-item>
 				<el-form-item label="接口返回表达式" :required="true">
 					<el-input v-model="step.relValue" placeholder="请输入接口返回表达式"></el-input>
@@ -173,7 +173,7 @@
 					<el-input type="textarea" v-model="step.requestParam"></el-input>
 				</el-form-item>
 				<el-form-item label="关联参数">
-					<el-input v-model="step.relationPram"></el-input>
+					<el-input type="textarea" v-model="step.relationParam"></el-input>
 				</el-form-item>
 				<el-form-item label="接口返回表达式" :required="true">
 					<el-input v-model="step.relValue" placeholder="请输入接口返回表达式"></el-input>
